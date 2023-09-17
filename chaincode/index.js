@@ -1,3 +1,7 @@
-const { PharmaSupplychain } = require("./contracts/PharmaSupplychain");
+import { DrugTransferContract, LifeCycleContract, RegistrationContract } from './contracts';
 
-module.exports.contracts = [ PharmaSupplychain ];
+export default contracts = [
+  DrugTransferContract,
+  LifeCycleContract,
+  RegistrationContract
+];
