@@ -1,0 +1,16 @@
+{
+  "name": "pharma-net-chaincode",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Rijash Ali",
+  "license": "ISC",
+  "dependencies": {
+    "fabric-contract-api": "^2.5.4",
+    "fabric-shim": "^2.5.4",
+    "moment": "^2.29.4"
+  }
+}

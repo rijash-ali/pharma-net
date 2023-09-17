@@ -1,0 +1,7 @@
+chaincode/node_modules
+chaincode/package-lock.json
+bin
+config
+test-network
+network
+install-fabric.sh
