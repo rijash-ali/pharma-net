@@ -1,5 +1,5 @@
-chaincode/node_modules
-chaincode/package-lock.json
+node_modules
+package-lock.json
 bin
 config
 test-network
