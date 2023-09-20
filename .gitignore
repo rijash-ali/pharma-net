@@ -4,6 +4,7 @@ bin
 config
 test-network
 install-fabric.sh
+network/channel-artifacts
 network/organizations/ordererOrganizations
 network/organizations/peerOrganizations
 network/system-genesis-block

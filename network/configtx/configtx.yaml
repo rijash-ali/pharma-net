@@ -41,9 +41,9 @@ Organizations:
       #   Type: Signature
       #   Rule: "OR('manufacturerMSP.peer')"
     # Anchor peer has not been mentioned in lecture
-    AnchorPeers:
-      - Host: peer0.manufacturer.pharma-network.com
-        Port: 7051
+    # AnchorPeers:
+    #   - Host: peer0.manufacturer.pharma-network.com
+    #     Port: 7051
 
   - &distributor
     Name: distributorMSP
@@ -65,9 +65,9 @@ Organizations:
     #   Type: Signature
     #   Rule: "OR('distributorMSP.peer')"
     # Anchor peer has not been mentioned in lecture
-    AnchorPeers:
-      - Host: peer0.distributor.pharma-network.com
-        Port: 9051
+    # AnchorPeers:
+    #   - Host: peer0.distributor.pharma-network.com
+    #     Port: 9051
 
   - &retailer
     Name: retailerMSP
@@ -89,9 +89,9 @@ Organizations:
     #   Type: Signature
     #   Rule: "OR('retailerMSP.peer')"
     # Anchor peer has not been mentioned in lecture
-    AnchorPeers:
-      - Host: peer0.retailer.pharma-network.com
-        Port: 11051
+    # AnchorPeers:
+    #   - Host: peer0.retailer.pharma-network.com
+    #     Port: 11051
 
   - &consumer
     Name: consumerMSP
@@ -113,9 +113,9 @@ Organizations:
     #   Type: Signature
     #   Rule: "OR('consumerMSP.peer')"
     # Anchor peer has not been mentioned in lecture
-    AnchorPeers:
-      - Host: peer0.consumer.pharma-network.com
-        Port: 13051
+    # AnchorPeers:
+    #   - Host: peer0.consumer.pharma-network.com
+    #     Port: 13051
 
   - &transporter
     Name: transporterMSP
@@ -137,28 +137,28 @@ Organizations:
     #   Type: Signature
     #   Rule: "OR('transporterMSP.peer')"
     # Anchor peer has not been mentioned in lecture
-    AnchorPeers:
-      - Host: peer0.transporter.pharma-network.com
-        Port: 15051
+    # AnchorPeers:
+    #   - Host: peer0.transporter.pharma-network.com
+    #     Port: 15051
 
 #Capabilities
 # Defines the least versions of the fabric binary images supported by each entities
 Capabilities:
   Channel: &ChannelCapabilities
-    v2_0: true
+    # v2_0: true
     # ? Provided as per ref_project
-    # V1_4_3: true
+    V1_4_3: true
     # V1_3: false
     # V1_1: false
   Orderer: &OrdererCapabilities
-    v2_0: true
+    # v2_0: true
     # ? Provided as per ref_project
-    # V1_4_2: true
+    V1_4_2: true
     # V1_1: false
   Application: &ApplicationCapabilities
-    v2_0: true
+    # v2_0: true
     # ? Provided as per ref_project
-    # V1_4_2: true
+    V1_4_2: true
     # V1_3: false
     # V1_2: false
     # V1_1: false
@@ -193,19 +193,57 @@ Application: &ApplicationDefaults
 
 #Orderer
 
+# Orderer: &OrdererDefaults
+#   OrdererType: solo
+#   Addresses:
+#     - orderer.pharma-network.com:7050
+#   BatchTimeout: 2s
+#   BatchSize:
+#     MaxMessageCount: 10
+#     AbsoluteMaxBytes: 99 MB
+#     PreferredMaxBytes: 512 KB
+#   Organizations:
+#   Capabilities: *OrdererCapabilities # not mentioned in the lecture
+#   # For Orderer policies their canonical path is
+#   # /Channel/Orderer/<PolicyName>
+#   Policies:
+#     Readers:
+#       Type: ImplicitMeta
+#       Rule: "ANY Readers"
+#     Writers:
+#       Type: ImplicitMeta
+#       Rule: "ANY Writers"
+#     Admins:
+#       Type: ImplicitMeta
+#       Rule: "MAJORITY Admins"
+#     # BlockValidation specifies what signatures must be included in the block
+#     # from the orderer for the peer to validate it.
+#     BlockValidation:
+#       Type: ImplicitMeta
+#       Rule: "ANY Writers"
+
 Orderer: &OrdererDefaults
-  OrdererType: solo
+  OrdererType: etcdraft
   Addresses:
     - orderer.pharma-network.com:7050
+  EtcdRaft:
+    Consenters:
+      - Host: orderer.pharma-network.com
+        Port: 7050
+        ClientTLSCert: ../organizations/ordererOrganizations/pharma-network.com/orderers/orderer.pharma-network.com/tls/server.crt
+        ServerTLSCert: ../organizations/ordererOrganizations/pharma-network.com/orderers/orderer.pharma-network.com/tls/server.crt
+  # Batch Timeout: The amount of time to wait before creating a batch
   BatchTimeout: 2s
+  # Batch Size: Controls the number of messages batched into a block
   BatchSize:
+    # Max Message Count: The maximum number of messages to permit in a batch
     MaxMessageCount: 10
     AbsoluteMaxBytes: 99 MB
     PreferredMaxBytes: 512 KB
   Organizations:
-  Capabilities: *OrdererCapabilities # not mentioned in the lecture
-  # For Orderer policies their canonical path is
-  # /Channel/Orderer/<PolicyName>
+  # Policies defines the set of policies at this level of the config tree
+  # For Orderer policies, their canonical path is
+  #   /Channel/Orderer/<PolicyName>
   Policies:
     Readers:
       Type: ImplicitMeta
@@ -245,8 +283,6 @@ Channel: &ChannelDefaults
 Profiles:
   OrdererGenesis: # Referred as CertificationOrderGenesis in lecture
     <<: *ChannelDefaults
-    Capabilities:
-      <<: *ChannelCapabilities
     Orderer:
       <<: *OrdererDefaults
       Organizations:
@@ -264,6 +300,7 @@ Profiles:
 
   PharmaChannel: # Referred as CertificationChannel in lecture
     Consortium: PharmacyConsortium
+    <<: *ChannelDefaults
     Application:
       <<: *ApplicationDefaults
       Organizations:
