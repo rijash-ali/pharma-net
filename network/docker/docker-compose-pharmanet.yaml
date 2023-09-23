@@ -419,7 +419,7 @@ services:
       - CORE_PEER_GOSSIP_BOOTSTRAP=peer1.transporter.pharma-network.com:16051
       - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer1.transporter.pharma-network.com:16051
       - CORE_PEER_LOCALMSPID=transporterMSP
-      - CORE_OPERATIONS_LISTENADDRESS=peer1.transporter.pharma-network.com:9443
+      - CORE_OPERATIONS_LISTENADDRESS=peer1.transporter.pharma-network.com:9453
     volumes:
       - /var/run/docker.sock:/host/var/run/docker.sock
       - ../organizations/peerOrganizations/transporter.pharma-network.com/peers/peer1.transporter.pharma-network.com/msp:/etc/hyperledger/fabric/msp
