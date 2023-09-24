@@ -4,9 +4,9 @@ import { ContractInstance } from "../../../contractUtils";
 import { REGISTRATION_CONTRACT_KEY } from "../../utils/contractKeys";
 
 export default async function main(mspId, identityKey, txnObj) {
-  const contractInstance = new ContractInstance();
+  const gatewayInstance = new ContractInstance();
   try {
-    const contract = await contractInstance.getContractInstance(REGISTRATION_CONTRACT_KEY, mspId, identityKey);
+    const contract = await gatewayInstance.getContractInstance(REGISTRATION_CONTRACT_KEY, mspId, identityKey);
     const { companyCRN, companyName, location, organisationRole } = txnObj;
     const responseBuffer = await contract.submitTransaction('registerCompany', companyCRN, companyName, location, organisationRole);
     return JSON.parse(responseBuffer.toString());
@@ -16,6 +16,6 @@ export default async function main(mspId, identityKey, txnObj) {
     throw err;
   }
   finally {
-    contractInstance.disconnect();
+    gatewayInstance.disconnect();
   }
 }

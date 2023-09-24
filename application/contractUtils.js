@@ -14,7 +14,7 @@ export const usersIdentityKeys = Object.freeze({
   USER1_ORG2: 'USER1_ORG2',
 });
 
-export class ContractInstance {
+export class GatewayInstance {
   #gateway;
 
   constructor() {

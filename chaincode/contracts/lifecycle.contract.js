@@ -69,7 +69,7 @@ export class LifeCycleContract extends Contract {
    * @param serialNo - Serial number of the drug
    * @returns
    */
-  viewDrugCurrentState = async (ctx, drugName, serialNo) => {
+  async viewDrugCurrentState(ctx, drugName, serialNo) {
     const key = deriveDrugAssetKey(ctx, drugName, serialNo);
     const asset = await ContractRepository.getState(key);
 
