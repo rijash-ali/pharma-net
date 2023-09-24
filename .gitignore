@@ -1,5 +1,6 @@
 node_modules
 package-lock.json
+yarn.lock
 bin
 config
 test-network
@@ -8,3 +9,4 @@ network/channel-artifacts
 network/organizations/ordererOrganizations
 network/organizations/peerOrganizations
 network/system-genesis-block
+identity
