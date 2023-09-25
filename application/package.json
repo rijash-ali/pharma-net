@@ -17,6 +17,7 @@
     "fabric-ca-client": "^2.2.18",
     "fabric-network": "^2.2.18",
     "js-yaml": "^4.1.0",
+    "jsonwebtoken": "^9.0.2",
     "morgan": "^1.10.0",
     "nodemon": "^3.0.1",
     "pug": "^3.0.2",

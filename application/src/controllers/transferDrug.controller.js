@@ -2,10 +2,12 @@ import _createPurchaseOrder from '../services/drug-transfer-contract/createPurch
 import _createShipment from '../services/drug-transfer-contract/createShipment';
 import _updateShipment from '../services/drug-transfer-contract/updateShipment';
 import _retailDrug from '../services/drug-transfer-contract/retailDrug';
+import { verifyToken } from '../utils/jwtUtils';
 
 export async function createPurchaseOrder(req, res) {
     try {
-        const result = await _createPurchaseOrder(req.body.data);
+        const { mspId, userIdentity } = verifyToken(req);
+        const result = await _createPurchaseOrder(mspId, userIdentity, req.body.data);
         res.json(result);
     }
     catch(error) {
@@ -15,7 +17,8 @@ export async function createPurchaseOrder(req, res) {
 
 export async function createShipment(req, res) {
     try {
-        const result = await _createShipment(req.body.data);
+        const { mspId, userIdentity } = verifyToken(req);
+        const result = await _createShipment(mspId, userIdentity, req.body.data);
         res.json(result);
     }
     catch(error) {
@@ -25,7 +28,8 @@ export async function createShipment(req, res) {
 
 export async function updateShipment(req, res) {
     try {
-        const result = await _updateShipment(req.body.data);
+        const { mspId, userIdentity } = verifyToken(req);
+        const result = await _updateShipment(mspId, userIdentity, req.body.data);
         res.json(result);
     }
     catch(error) {
@@ -35,7 +39,8 @@ export async function updateShipment(req, res) {
 
 export async function retailDrug(req, res) {
     try {
-        const result = await _retailDrug(req.body.data);
+        const { mspId, userIdentity } = verifyToken(req);
+        const result = await _retailDrug(mspId, userIdentity, req.body.data);
         res.json(result);
     }
     catch(error) {

@@ -3,7 +3,7 @@ import { viewDrugCurrentState, viewHistory } from "../controllers/lifecycle.cont
 
 const router = Router();
 
-router.post('/view-history/:drugName/:serialNo', viewHistory);
-router.post('/view-drug-current-state/:drugName/:serialNo', viewDrugCurrentState);
+router.get('/view-history/:drugName/:serialNo', viewHistory);
+router.get('/view-drug-current-state/:drugName/:serialNo', viewDrugCurrentState);
 
 export default router;

@@ -1,4 +1,4 @@
-import { LIFE_CYCLE_CONTRACT_KEY } from "../../../../chaincode/utils/assetKeys";
+import { LIFE_CYCLE_CONTRACT_KEY } from "../../utils/contractKeys";
 import { GatewayInstance } from "../../../contractUtils";
 
 export default async function main(mspId, identityKey, drugName, serialNo) {
