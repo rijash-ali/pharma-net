@@ -1,6 +1,7 @@
 import { Gateway, Wallets } from "fabric-network";
 import fs from 'fs';
 import { config } from "./configs/config";
+import { CHAINCODE_KEY } from "./src/utils/contractKeys";
 
 export const mspIds = Object.freeze({
   Org1MSP: 'Org1MSP',
@@ -36,7 +37,7 @@ export class GatewayInstance {
 
     await this.#gateway.connect(connectionProfile, gatewayOptions);
     const channel = await this.#gateway.getNetwork('mychannel');
-    const contract = channel.getContract('org.pharma-network.pharmanet', contractKey);
+    const contract = channel.getContract(CHAINCODE_KEY, contractKey);
     return contract;
   }
 

@@ -1,14 +1,14 @@
-const NETWORK_KEY = 'org.pharma-network.pharmanet';
+const CHAINCODE_KEY = 'pharmanet';
 
-export const REGISTRATION_CONTRACT_KEY = `${NETWORK_KEY}.registration`;
-export const DRUG_TRANSFER_CONTRACT_KEY = `${NETWORK_KEY}.drugTransfer`;
-export const LIFE_CYCLE_CONTRACT_KEY = `${NETWORK_KEY}.lifcycle`;
+export const REGISTRATION_CONTRACT_KEY = `${CHAINCODE_KEY}.registration`;
+export const DRUG_TRANSFER_CONTRACT_KEY = `${CHAINCODE_KEY}.drugTransfer`;
+export const LIFE_CYCLE_CONTRACT_KEY = `${CHAINCODE_KEY}.lifcycle`;
 
 export const pharmaNameSpaces = Object.freeze({
-    commpanyAsset: `${NETWORK_KEY}.company`,
-    drugAsset: `${NETWORK_KEY}.drug`,
-    drugPurchaseAsset: `${NETWORK_KEY}.drugPurchase`,
-    drugShipmentAsset: `${NETWORK_KEY}.drugShipment`
+    commpanyAsset: `${CHAINCODE_KEY}.company`,
+    drugAsset: `${CHAINCODE_KEY}.drug`,
+    drugPurchaseAsset: `${CHAINCODE_KEY}.drugPurchase`,
+    drugShipmentAsset: `${CHAINCODE_KEY}.drugShipment`
 })
 
 export const deriveCompanyAssetKey =
