@@ -1,7 +1,7 @@
 'use strict';
 
 const { Contract } = require("fabric-contract-api");
-const { LIFE_CYCLE_CONTRACT_KEY } = require("../utils/assetKeys");
+const { LIFE_CYCLE_CONTRACT_KEY, deriveDrugAssetKey } = require("../utils/assetKeys");
 const { ContractRepository } = require("../repository");
 
 class LifeCycleContract extends Contract {
@@ -73,7 +73,7 @@ class LifeCycleContract extends Contract {
    */
   async viewDrugCurrentState(ctx, drugName, serialNo) {
     const key = deriveDrugAssetKey(ctx, drugName, serialNo);
-    const asset = await ContractRepository.getState(key);
+    const asset = await ContractRepository.getAsset(ctx, key);
 
     if (!asset)
       throw new Error(`Drug ${drugName} with serialNo ${serialNo} doesn't exist on the network!`);

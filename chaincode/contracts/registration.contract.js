@@ -2,7 +2,7 @@
 
 const { Contract } = require("fabric-contract-api");
 const { ContractRepository } = require("../repository");
-const { REGISTRATION_CONTRACT_KEY, deriveCompanyAssetKey, pharmaNameSpaces } = require("../utils/assetKeys");
+const { REGISTRATION_CONTRACT_KEY, deriveCompanyAssetKey, deriveDrugAssetKey, pharmaNameSpaces } = require("../utils/assetKeys");
 const { PharmaNetOrgs, PharmaNetRoles } = require("../utils/enums");
 const moment = require('moment');
 
@@ -73,7 +73,7 @@ class RegistrationContract extends Contract {
     throw new Error("Only manufacturing companies are allowed to add drugs on pharma network!");
 
     /** Check id company is registered on the network */
-    const manufacturer = await ContractRepository.getFirstAssetFromKeyPrefix(pharmaNameSpaces.commpanyAsset, companyCRN);
+    const manufacturer = await ContractRepository.getFirstAssetFromKeyPrefix(ctx, pharmaNameSpaces.commpanyAsset, companyCRN);
     if (!(manufacturer))
       throw new Error(`Company with given CRN - ${companyCRN} is not registered on the network`);
 

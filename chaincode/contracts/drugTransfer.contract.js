@@ -75,12 +75,12 @@ class DrugTransferContract extends Contract {
 
     // Verify if buyer
     const poKey = deriveDrugPurchaseAssetKey(ctx, buyerCRN, drugName);
-    const purchaseOrder = await ContractRepository.getAsset(poKey);
+    const purchaseOrder = await ContractRepository.getAsset(ctx, poKey);
 
     /** Validation: Check if purchase order exists */
     if (!purchaseOrder)
       throw new Error(`Purchase order by buyer(${buyerCRN}) for drug - ${drugName} doesn't exist`);
-    const seller = await ContractRepository.getAsset(purchaseOrder.seller);
+    const seller = await ContractRepository.getAsset(ctx, purchaseOrder.seller);
 
     // if (!seller.companyID.includes(ctx.clientIdentity.getAttributeValue('companyCRN')))
     //   throw new Error("The purchase order is not issued to the seller");
@@ -96,7 +96,7 @@ class DrugTransferContract extends Contract {
 
     const assets = listOfAssets.map(async ({ serialNo }) => {
       const drugAssetKey = deriveDrugAssetKey(ctx, drugName, serialNo);
-      const drugAsset = await ContractRepository.getAsset(drugAssetKey);
+      const drugAsset = await ContractRepository.getAsset(ctx, drugAssetKey);
       /** Valdidation: The IDs of the Asset should be valid IDs which are registered on the network. */
       if (!(drugAsset))
         throw new Error(`Drug with serialNo: ${serialNo} is not registered on the network`);
@@ -140,7 +140,7 @@ class DrugTransferContract extends Contract {
 
     const key = deriveDrugShipmentAssetKey(ctx, buyerCRN, drugName);
 
-    const consignment = await ContractRepository.getAsset(key);
+    const consignment = await ContractRepository.getAsset(ctx, key);
     if (!consignment)
       throw new Error("Invalid consignment.");
     else if (consignment.status !== ShipmentStatus.inTransit)
@@ -167,7 +167,7 @@ class DrugTransferContract extends Contract {
 
     /** Refactor using Rich queries from Couch Db */
     consignment.assets.map(async drugAssetKey => {
-      const drugAsset = await ContractRepository.getAsset(drugAssetKey);
+      const drugAsset = await ContractRepository.getAsset(ctx, drugAssetKey);
       const updatedDrugAsset = {
         ...drugAsset,
         owner: buyer.key,
@@ -190,7 +190,7 @@ class DrugTransferContract extends Contract {
     throw new Error("Invalid seller: Only retailers can sell to customers");
 
     const drugAssetKey = deriveDrugAssetKey(ctx, drugName, serialNo);
-    const drugAsset = await ContractRepository.getAsset(drugAssetKey);
+    const drugAsset = await ContractRepository.getAsset(ctx, drugAssetKey);
     if (!drugAsset)
       throw new Error("Drug asset is not registered on the network");
 
