@@ -1,4 +1,6 @@
-export const PharmaNetOrgs = Object.freeze({
+'use strict';
+
+const PharmaNetOrgs = Object.freeze({
   manufacturer: 'manufacturerMSP',
   distributor: 'distributorMSP',
   retailer: 'retailerMSP',
@@ -6,14 +8,21 @@ export const PharmaNetOrgs = Object.freeze({
   consumer: 'consumerMSP'
 });
 
-export const PharmaNetRoles = Object.freeze({
+const PharmaNetRoles = Object.freeze({
   Manufacturer: 1,
   Distributor: 2,
   Retailer: 3,
   Transporter: null //No hierarchy key for transporters
 });
 
-export const ShipmentStatus = Object.freeze({
-  inTransit: 'in-transit', 
+const ShipmentStatus = Object.freeze({
+  inTransit: 'in-transit',
   delivered: 'delivered'
 });
+
+module.exports = {
+  ...module.exports,
+  PharmaNetOrgs,
+  PharmaNetRoles,
+  ShipmentStatus,
+}

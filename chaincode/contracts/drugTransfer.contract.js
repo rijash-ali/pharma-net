@@ -1,11 +1,11 @@
 'use strict';
 
-import { Contract } from "fabric-contract-api";
-import { DRUG_TRANSFER_CONTRACT_KEY, deriveDrugAssetKey, deriveDrugPurchaseAssetKey, deriveDrugShipmentAssetKey, pharmaNameSpaces } from "../utils/assetKeys";
-import { ContractRepository } from "../repository";
-import { PharmaNetOrgs, PharmaNetRoles, ShipmentStatus } from "../utils/enums";
+const { Contract } = require("fabric-contract-api");
+const { DRUG_TRANSFER_CONTRACT_KEY, deriveDrugAssetKey, deriveDrugPurchaseAssetKey, deriveDrugShipmentAssetKey, pharmaNameSpaces } = require("../utils/assetKeys");
+const { ContractRepository } = require("../repository");
+const { PharmaNetOrgs, PharmaNetRoles, ShipmentStatus } = require("../utils/enums");
 
-export class DrugTransferContract extends Contract {
+class DrugTransferContract extends Contract {
   constructor() {
     super(DRUG_TRANSFER_CONTRACT_KEY);
   }
@@ -22,7 +22,7 @@ export class DrugTransferContract extends Contract {
   async createPO(ctx, buyerCRN, sellerCRN, drugName, quantity) {
     /** Role: Restricted to Distributor | Retailer */
     if ([PharmaNetOrgs.distributor, PharmaNetOrgs.retailer].includes(ctx.clientIdentity.getMSPID()))
-      throw new Error("Only distributors or retailers are allowed to create purchase orders on pharma network!");
+    throw new Error("Only distributors or retailers are allowed to create purchase orders on pharma network!");
 
     const buyer = ContractRepository.getFirstAssetFromKeyPrefix(ctx, pharmaNameSpaces.commpanyAsset, buyerCRN);
     const seller = ContractRepository.getFirstAssetFromKeyPrefix(ctx, pharmaNameSpaces.commpanyAsset, sellerCRN);
@@ -56,7 +56,7 @@ export class DrugTransferContract extends Contract {
 
     await ContractRepository.putState(key, asset);
 
-    return asset;
+    return true;
   }
 
   /**
@@ -71,7 +71,7 @@ export class DrugTransferContract extends Contract {
   async createShipment(ctx, buyerCRN, drugName, listOfAssets = [], transporterCRN) {
     /** Role: Restricted to Distributor | Retailer */
     if ([PharmaNetOrgs.distributor, PharmaNetOrgs.retailer].includes(ctx.clientIdentity.getMSPID()))
-      throw new Error("Only distributors or retailers are allowed to create shipment orders on pharma network!");
+    throw new Error("Only distributors or retailers are allowed to create shipment orders on pharma network!");
 
     // Verify if buyer
     const poKey = deriveDrugPurchaseAssetKey(ctx, buyerCRN, drugName);
@@ -120,6 +120,8 @@ export class DrugTransferContract extends Contract {
     };
 
     await ContractRepository.putAsset(key, asset);
+
+    return true;
   };
 
   /**
@@ -133,7 +135,7 @@ export class DrugTransferContract extends Contract {
   async updateShipment(ctx, buyerCRN, drugName, transporterCRN) {
     /** Role: Restricted to Transporter */
     if (ctx.clientIdentity.getMSPID() !== PharmaNetOrgs.transporter)
-      throw new Error("Only transporters are allowed to update shipments on pharma network!");
+    throw new Error("Only transporters are allowed to update shipments on pharma network!");
 
 
     const key = deriveDrugShipmentAssetKey(ctx, buyerCRN, drugName);
@@ -177,7 +179,7 @@ export class DrugTransferContract extends Contract {
     const updatedAsset = { ...consignment, status: ShipmentStatus.delivered };
     await ContractRepository.putState(key, updatedAsset);
 
-    return updatedAsset;
+    return true;
   };
 
   async retailDrug(ctx, drugName, serialNo, retailerCRN, customerAadhar) {
@@ -185,7 +187,7 @@ export class DrugTransferContract extends Contract {
 
     /** Role: Restricted to Retailer */
     if (ctx.clientIdentity.getMSPID() !== PharmaNetOrgs.retailer || !retailer || retailer.hierarchyKey !== PharmaNetRoles.Retailer)
-      throw new Error("Invalid seller: Only retailers can sell to customers");
+    throw new Error("Invalid seller: Only retailers can sell to customers");
 
     const drugAssetKey = deriveDrugAssetKey(ctx, drugName, serialNo);
     const drugAsset = await ContractRepository.getAsset(drugAssetKey);
@@ -202,6 +204,8 @@ export class DrugTransferContract extends Contract {
     };
     await ContractRepository.putState(drugAssetKey, updatedAsset);
 
-    return updatedAsset;
+    return true;
   };
 }
+
+module.exports.DrugTransferContract = DrugTransferContract;

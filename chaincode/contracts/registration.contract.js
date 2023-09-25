@@ -1,16 +1,14 @@
 'use strict';
-import { Contract } from "fabric-contract-api";
-import { ContractRepository } from "../repository";
-import { REGISTRATION_CONTRACT_KEY, deriveCompanyAssetKey, pharmaNameSpaces } from "../utils/assetKeys";
-import { PharmaNetOrgs, PharmaNetRoles } from "../utils/enums";
-import moment from 'moment';
 
-export class RegistrationContract extends Contract {
-  #repository;
+const { Contract } = require("fabric-contract-api");
+const { ContractRepository } = require("../repository");
+const { REGISTRATION_CONTRACT_KEY, deriveCompanyAssetKey, pharmaNameSpaces } = require("../utils/assetKeys");
+const { PharmaNetOrgs, PharmaNetRoles } = require("../utils/enums");
+const moment = require('moment');
 
+class RegistrationContract extends Contract {
   constructor() {
     super(REGISTRATION_CONTRACT_KEY);
-    this.#repository = new ContractRepository();
   }
 
   async instantiate(ctx) {
@@ -29,15 +27,16 @@ export class RegistrationContract extends Contract {
   async registerCompany(ctx, companyCRN, companyName, location, organisationRole) {
 
     if (ctx.clientIdentity.getMSPID() === PharmaNetOrgs.consumer)
-      throw new Error("Sorry, consumers are not allowed to register companies on pharma network!");
+    throw new Error("Sorry, consumers are not allowed to register companies on pharma network!");
 
-    if (!!(await this.#repository.getFirstAssetFromKeyPrefix(pharmaNameSpaces.commpanyAsset, companyCRN)))
+    if (!!(await ContractRepository.getFirstAssetFromKeyPrefix(ctx, pharmaNameSpaces.commpanyAsset, companyCRN)))
       throw new Error(`Company with CRN ${companyCRN} is already registered on the network`);
 
-    if (!Object.key(PharmaNetRoles).includes(organisationRole))
+    if (!Object.keys(PharmaNetRoles).includes(organisationRole))
       throw new Error(`Invlaid role - ${organisationRole}`);
 
     const key = deriveCompanyAssetKey(ctx, companyCRN, companyName);
+    
     const asset = {
       companyID: key,
       name: companyName,
@@ -48,14 +47,14 @@ export class RegistrationContract extends Contract {
        * Note: There will be no hierarchy key for transporters.
         */
       hierarchyKey: organisationRole === "Manufacturer" ? PharmaNetRoles.Manufacturer
-        : organisationRole === "Distributor" ? PHARMANETROLES.Distributor
-          : organisationRole === "Retailer" ? PHARMANETROLES.Retailer
-            : PHARMANETROLES.Transporter
+        : organisationRole === "Distributor" ? PharmaNetRoles.Distributor
+          : organisationRole === "Retailer" ? PharmaNetRoles.Retailer
+            : PharmaNetRoles.Transporter
     };
 
-    await this.#repository.putAsset(ctx, key, asset);
+    await ContractRepository.putAsset(ctx, key, asset);
 
-    return asset
+    return true;
   };
 
   /**
@@ -71,10 +70,10 @@ export class RegistrationContract extends Contract {
   async addDrug(ctx, drugName, serialNo, mfgDate, expDate, companyCRN) {
     /** Check if drug is added by manufacturer organisation */
     if (ctx.clientIdentity.getMSPID() !== PharmaNetOrgs.manufacturer)
-      throw new Error("Only manufacturing companies are allowed to add drugs on pharma network!");
+    throw new Error("Only manufacturing companies are allowed to add drugs on pharma network!");
 
     /** Check id company is registered on the network */
-    const manufacturer = await this.#repository.getFirstAssetFromKeyPrefix(pharmaNameSpaces.commpanyAsset, companyCRN);
+    const manufacturer = await ContractRepository.getFirstAssetFromKeyPrefix(pharmaNameSpaces.commpanyAsset, companyCRN);
     if (!(manufacturer))
       throw new Error(`Company with given CRN - ${companyCRN} is not registered on the network`);
 
@@ -99,8 +98,10 @@ export class RegistrationContract extends Contract {
       shipment: [],
     };
 
-    await this.#repository.putAsset(key, asset);
+    await ContractRepository.putAsset(ctx, key, asset);
 
-    return asset;
+    return true;
   }
 }
+
+module.exports.RegistrationContract = RegistrationContract;

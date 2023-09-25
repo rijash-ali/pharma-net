@@ -1,23 +1,37 @@
+'use strict';
+
 const CHAINCODE_KEY = 'pharmanet';
 
-export const REGISTRATION_CONTRACT_KEY = `${CHAINCODE_KEY}.registration`;
-export const DRUG_TRANSFER_CONTRACT_KEY = `${CHAINCODE_KEY}.drugTransfer`;
-export const LIFE_CYCLE_CONTRACT_KEY = `${CHAINCODE_KEY}.lifcycle`;
+const REGISTRATION_CONTRACT_KEY = `${CHAINCODE_KEY}.registration`;
+const DRUG_TRANSFER_CONTRACT_KEY = `${CHAINCODE_KEY}.drugTransfer`;
+const LIFE_CYCLE_CONTRACT_KEY = `${CHAINCODE_KEY}.lifcycle`;
 
-export const pharmaNameSpaces = Object.freeze({
+const pharmaNameSpaces = Object.freeze({
     commpanyAsset: `${CHAINCODE_KEY}.company`,
     drugAsset: `${CHAINCODE_KEY}.drug`,
     drugPurchaseAsset: `${CHAINCODE_KEY}.drugPurchase`,
     drugShipmentAsset: `${CHAINCODE_KEY}.drugShipment`
 })
 
-export const deriveCompanyAssetKey =
+const deriveCompanyAssetKey =
     (ctx, companyCRN, companyName) => ctx.stub.createCompositeKey(pharmaNameSpaces.commpanyAsset, [companyCRN, companyName]);
 
-export const deriveDrugAssetKey = (ctx, drugName, serialNo) => ctx.stub.createCompositeKey(pharmaNameSpaces.drugAsset, [drugName, serialNo]);
+const deriveDrugAssetKey = (ctx, drugName, serialNo) => ctx.stub.createCompositeKey(pharmaNameSpaces.drugAsset, [drugName, serialNo]);
 
-export const deriveDrugPurchaseAssetKey =
+const deriveDrugPurchaseAssetKey =
     (ctx, buyerCRN, drugName) => ctx.stub.createCompositeKey(pharmaNameSpaces.drugPurchaseAsset, [buyerCRN, drugName]);
 
-export const deriveDrugShipmentAssetKey =
+const deriveDrugShipmentAssetKey =
     (ctx, buyerCRN, drugName) => ctx.stub.createCompositeKey(pharmaNameSpaces.drugShipmentAsset, [buyerCRN, drugName]);
+
+module.exports = {
+    ...module.exports,
+    pharmaNameSpaces,
+    REGISTRATION_CONTRACT_KEY,
+    DRUG_TRANSFER_CONTRACT_KEY,
+    LIFE_CYCLE_CONTRACT_KEY,
+    deriveCompanyAssetKey,
+    deriveDrugAssetKey,
+    deriveDrugPurchaseAssetKey,
+    deriveDrugShipmentAssetKey,
+}

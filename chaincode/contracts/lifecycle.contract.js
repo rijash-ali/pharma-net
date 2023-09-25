@@ -1,8 +1,10 @@
-import { Contract } from "fabric-contract-api";
-import { LIFE_CYCLE_CONTRACT_KEY } from "../utils/assetKeys";
-import { ContractRepository } from "../repository";
+'use strict';
 
-export class LifeCycleContract extends Contract {
+const { Contract } = require("fabric-contract-api");
+const { LIFE_CYCLE_CONTRACT_KEY } = require("../utils/assetKeys");
+const { ContractRepository } = require("../repository");
+
+class LifeCycleContract extends Contract {
   constructor() {
     super(LIFE_CYCLE_CONTRACT_KEY);
   }
@@ -79,3 +81,5 @@ export class LifeCycleContract extends Contract {
     return asset;
   };
 }
+
+module.exports.LifeCycleContract = LifeCycleContract;

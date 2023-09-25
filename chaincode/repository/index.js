@@ -1,4 +1,6 @@
-export class ContractRepository {
+'use strict';
+
+class ContractRepository {
 
   /**
    * Helper function to get asset data buffer from ledger
@@ -39,29 +41,29 @@ export class ContractRepository {
   }
 
   /**
-	 * Helper function to get first asset from the list of assets starting with a partial key
-	 * @param ctx - The transaction context object
-	 * @param assetNamespace - Namespace of the asset to be fetched
-	 * @param assetKeyPrefix - Partial composite key prefix of asset to be fetched
-	 * @returns
-	 */
-	static async getFirstAssetFromKeyPrefix(ctx, assetNamespace, assetKeyPrefix) {
-		//Get iterator of assets based on asset type partial composite key provided
-		let assetIterator = await this.getAssetIterator(ctx, assetNamespace, assetKeyPrefix);
-		let asset = await assetIterator.next();
+   * Helper function to get first asset from the list of assets starting with a partial key
+   * @param ctx - The transaction context object
+   * @param assetNamespace - Namespace of the asset to be fetched
+   * @param assetKeyPrefix - Partial composite key prefix of asset to be fetched
+   * @returns
+   */
+  static async getFirstAssetFromKeyPrefix(ctx, assetNamespace, assetKeyPrefix) {
+    //Get iterator of assets based on asset type partial composite key provided
+    let assetIterator = await this.getAssetIterator(ctx, assetNamespace, assetKeyPrefix);
+    let asset = await assetIterator.next();
 
-		//If there are no assets for given key then iterator will have no results
-		//Thus accessing next() result from iterator will give only done status
-		//If next() returns value then at least one asset is existing with given partial key prefix
-		let assetValue = asset.value;
-		
-		//Close the iterator if matching assets are existing, if not then iterator is already closed by this point
-		if(assetValue){
-			await assetIterator.close();
-		}
+    //If there are no assets for given key then iterator will have no results
+    //Thus accessing next() result from iterator will give only done status
+    //If next() returns value then at least one asset is existing with given partial key prefix
+    let assetValue = asset.value;
 
-		return assetValue;
-	}
+    //Close the iterator if matching assets are existing, if not then iterator is already closed by this point
+    if (assetValue) {
+      await assetIterator.close();
+    }
+
+    return assetValue;
+  }
 
   /**
    * Helper function to get history of an asset from ledger
@@ -89,3 +91,5 @@ export class ContractRepository {
     return !!dataBuffer.length;
   }
 }
+
+module.exports.ContractRepository = ContractRepository;
