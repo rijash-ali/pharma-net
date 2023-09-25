@@ -3,7 +3,8 @@ import _viewDrugCurrentState from '../services/lifecycle-contract/viewDrugCurren
 
 export async function viewHistory(req, res) {
     try {
-        const result = await _viewHistory(req.body.data);
+        const { drugName, serialNo } = req.params;
+        const result = await _viewHistory(drugName, serialNo);
         res.json(result);
     }
     catch (error) {
@@ -13,7 +14,8 @@ export async function viewHistory(req, res) {
 
 export async function viewDrugCurrentState(req, res) {
     try {
-        const result = await _viewDrugCurrentState(req.body.data);
+        const { drugName, serialNo } = req.params;
+        const result = await _viewDrugCurrentState(drugName, serialNo);
         res.json(result);
     }
     catch (error) {
