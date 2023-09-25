@@ -7,7 +7,7 @@ import { verifyToken } from '../utils/jwtUtils';
 export async function createPurchaseOrder(req, res) {
     try {
         const { mspId, userIdentity } = verifyToken(req);
-        const result = await _createPurchaseOrder(mspId, userIdentity, req.body.data);
+        const result = await _createPurchaseOrder(mspId, userIdentity, req.body);
         res.json(result);
     }
     catch(error) {
@@ -18,7 +18,7 @@ export async function createPurchaseOrder(req, res) {
 export async function createShipment(req, res) {
     try {
         const { mspId, userIdentity } = verifyToken(req);
-        const result = await _createShipment(mspId, userIdentity, req.body.data);
+        const result = await _createShipment(mspId, userIdentity, req.body);
         res.json(result);
     }
     catch(error) {
@@ -29,7 +29,7 @@ export async function createShipment(req, res) {
 export async function updateShipment(req, res) {
     try {
         const { mspId, userIdentity } = verifyToken(req);
-        const result = await _updateShipment(mspId, userIdentity, req.body.data);
+        const result = await _updateShipment(mspId, userIdentity, req.body);
         res.json(result);
     }
     catch(error) {
@@ -40,7 +40,7 @@ export async function updateShipment(req, res) {
 export async function retailDrug(req, res) {
     try {
         const { mspId, userIdentity } = verifyToken(req);
-        const result = await _retailDrug(mspId, userIdentity, req.body.data);
+        const result = await _retailDrug(mspId, userIdentity, req.body);
         res.json(result);
     }
     catch(error) {
