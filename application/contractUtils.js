@@ -2,6 +2,7 @@ import { Gateway, Wallets } from "fabric-network";
 import fs from 'fs';
 import { config } from "./configs/config";
 import { CHAINCODE_KEY } from "./src/utils/contractKeys";
+import jsyaml from 'js-yaml';
 
 export const mspIds = Object.freeze({
   Org1MSP: 'Org1MSP',
@@ -23,8 +24,9 @@ export class GatewayInstance {
   }
 
   async getContractInstance(contractKey, mspId, identityKey) {
-    const connectionProfile = jsyaml.load(fs.readFileSync(config.path.connectionProfile));
-    const wallet = await Wallets.newFileSystemWallet(`./identity/${mspId.replace('MSP', '').toLowerCase()}`);
+    const org = mspId.replace('MSP', '').toLowerCase();
+    const connectionProfile = jsyaml.load(fs.readFileSync(config.path[`${org}ConnectionProfile`]));
+    const wallet = await Wallets.newFileSystemWallet(`./identity/${org}`);
     const gatewayOptions = {
       wallet,
       identity: identityKey,
